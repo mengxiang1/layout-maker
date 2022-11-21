@@ -58,6 +58,8 @@ async def test():
 			if allobj.id == layobj.id:
 				allobj.color_1_hsv_enabled = False
 				allobj.color_2_hsv_enabled = False
+				allobj.color_1 = 1
+				allobj.color_2 = 1
 				reqobjs.append(allobj)
 			if allobj.follow_target_pos_center_id != None:
 				reqgrps.append(allobj.follow_target_pos_center_id)
