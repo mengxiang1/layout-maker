@@ -31,7 +31,7 @@ async def test():
 
 	target_level = int(input("Level ID: "))
 	starttime = time.time()	
-	reference = await client.get_level(84865722)
+	reference = await client.get_level(85916710)
 	if target_level < 128:
 		level = gd.Level.official(target_level)
 		default = True
@@ -57,6 +57,7 @@ async def test():
 		for allobj in reference2.get_objects():
 			if allobj.id == layobj.id:
 				allobj.color_1_hsv_enabled = False
+				allobj.color_2_hsv_enabled = False
 				reqobjs.append(allobj)
 			if allobj.follow_target_pos_center_id != None:
 				reqgrps.append(allobj.follow_target_pos_center_id)
