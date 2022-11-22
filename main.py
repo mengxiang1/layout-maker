@@ -6,7 +6,6 @@ import time
 import gd
 from gd.api import Editor
 
-blank = Editor()
 client = gd.Client()
 async def test():
 	try:
