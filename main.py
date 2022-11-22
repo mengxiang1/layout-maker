@@ -82,6 +82,20 @@ async def test():
 		editor.add_objects(obj)
 	print("Adding alpha trigger for center objects...")
 	editor.add_objects(gd.api.Object(x=-10, y=50, id=1007, target_group_id=nextgrp, duration=0, opacity=0))
+	
+	print("Optimising...")
+	optimise = Editor()
+	optimise.header = header
+	allgrps = []
+	for object in editor.objects:
+		if object.groups != None:
+			for group in object.groups:
+				allgrps.append(group)
+	allgrps = list(set(allgrps))
+	for object in editor.objects:
+		if object.target_group in allgrps or object.target_group == None:
+			optimise.add_objects(object)
+	
 
 	new_name = level.name
 	if len(level.name) <= 16:
@@ -90,7 +104,8 @@ async def test():
 		song = gd.Song.official(level.id - 1)
 	else:
 		song = level.song
-	final = gd.Level(data = editor.dump(), name = new_name, client=client, song=song, copyable=True, description=f'Layout of {level.name} by {level.creator}, {len(editor.objects)} objects', coins=level.coins, original = level.id)
+
+	final = gd.Level(data = optimise.dump(), name = new_name, client=client, song=song, copyable=True, description=f'Layout of {level.name} by {level.creator}, {len(optimise.objects)} objects', coins=level.coins, original = level.id)
 	print(f"Generation time: {round(time.time() - starttime)} seconds")
 	while True:
 		try:
