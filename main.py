@@ -81,6 +81,9 @@ async def test():
 		editor.add_objects(obj)
 	print("Adding alpha trigger for center objects...")
 	editor.add_objects(gd.api.Object(x=-10, y=50, id=1007, target_group_id=nextgrp, duration=0, opacity=0))
+	last_obj = reference2.get_objects()[-1]
+	last_obj.add_groups((nextgrp))
+	editor.add_objects(last_obj)
 	
 	print("Optimising...")
 	optimise = Editor()
@@ -117,5 +120,9 @@ async def test():
 		else:
 			print(f"Level uploaded: {final.name}, {final.objects} objects")
 			break
+	reference.attach_client(client)
+	await reference.comment(f"I made a layout of {level.name}, ID: {final.id}", 69)
+
+
 	
 asyncio.run(test())
