@@ -51,17 +51,17 @@ async def test():
 	reqobjs = []
 	reqgrps = []
 	miscobjs = []
+	layobjids = [i.id for i in reference.open_editor().get_objects()]
 	print("Queueing hitbox objects and center groups...")
-	for layobj in reference.open_editor().get_objects():
-		for allobj in reference2.get_objects():
-			if allobj.id == layobj.id:
-				allobj.color_1_hsv_enabled = False
-				allobj.color_2_hsv_enabled = False
-				allobj.color_1 = 1
-				allobj.color_2 = 1
-				reqobjs.append(allobj)
-			if allobj.follow_target_pos_center_id != None:
-				reqgrps.append(allobj.follow_target_pos_center_id)
+	for allobj in reference2.get_objects():
+		if allobj.id in layobjids:
+			allobj.color_1_hsv_enabled = False
+			allobj.color_2_hsv_enabled = False
+			allobj.color_1 = None
+			allobj.color_2 = None
+			reqobjs.append(allobj)
+		if allobj.follow_target_pos_center_id != None:
+			reqgrps.append(allobj.follow_target_pos_center_id)
 	reqgrps = set(reqgrps)
 	print("Center groups: " + str(reqgrps))
 	print("Finding center objects...")
@@ -84,20 +84,6 @@ async def test():
 	last_obj = reference2.get_objects()[-1]
 	last_obj.add_groups((nextgrp))
 	editor.add_objects(last_obj)
-	
-	print("Optimising...")
-	optimise = Editor()
-	optimise.header = header
-	allgrps = []
-	for object in editor.objects:
-		if object.groups != None:
-			for group in object.groups:
-				allgrps.append(group)
-	allgrps = list(set(allgrps))
-	for object in editor.objects:
-		if object.target_group in allgrps or object.target_group == None:
-			optimise.add_objects(object)
-	
 
 	new_name = level.name
 	if len(level.name) <= 16:
@@ -107,7 +93,7 @@ async def test():
 	else:
 		song = level.song
 
-	final = gd.Level(data = optimise.dump(), name = new_name, client=client, song=song, copyable=True, description=f'Layout of {level.name} by {level.creator}, {len(optimise.objects)} objects', coins=level.coins, original = level.id)
+	final = gd.Level(data = editor.dump(), name = new_name, client=client, song=song, copyable=True, description=f'Layout of {level.name} by {level.creator}, {len(editor.objects)} objects', coins=level.coins, original = level.id)
 	print(f"Generation time: {round(time.time() - starttime)} seconds")
 	while True:
 		try:
@@ -120,9 +106,5 @@ async def test():
 		else:
 			print(f"Level uploaded: {final.name}, {final.objects} objects")
 			break
-	reference.attach_client(client)
-	await reference.comment(f"I made a layout of {level.name}, ID: {final.id}", 69)
-
-
 	
 asyncio.run(test())
