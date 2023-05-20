@@ -27,7 +27,6 @@ async def test():
 				time.sleep(10)
 				continue
 
-
 	target_level = int(input("Level ID: "))
 	starttime = time.time()	
 	reference = await client.get_level(85916710)
@@ -75,9 +74,10 @@ async def test():
 		if obj not in reqobjs:
 			obj.add_groups(nextgrp)
 		reqobjs.append(obj)
-	reqobjs = set(reqobjs)
+	unique_reqobjs = []
+	[unique_reqobjs.append(obj) for obj in reqobjs if obj not in unique_reqobjs]
 	print("Adding all objects...")
-	for obj in reqobjs:
+	for obj in unique_reqobjs:
 		editor.add_objects(obj)
 	print("Adding alpha trigger for center objects...")
 	editor.add_objects(gd.api.Object(x=-10, y=50, id=1007, target_group_id=nextgrp, duration=0, opacity=0))
